@@ -2,8 +2,10 @@ package principal;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -61,7 +63,7 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         sp_K = new javax.swing.JSpinner();
         btn_clasidicar = new javax.swing.JButton();
-        btn_agregar1 = new javax.swing.JButton();
+        btn_quitar = new javax.swing.JButton();
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("X ");
@@ -76,6 +78,7 @@ public class Interfaz extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         panel_obj.setBackground(new java.awt.Color(236, 236, 236));
+        panel_obj.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         panel_obj.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         panel_obj.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -87,11 +90,11 @@ public class Interfaz extends javax.swing.JFrame {
         panel_obj.setLayout(panel_objLayout);
         panel_objLayout.setHorizontalGroup(
             panel_objLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 701, Short.MAX_VALUE)
+            .addGap(0, 695, Short.MAX_VALUE)
         );
         panel_objLayout.setVerticalGroup(
             panel_objLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 444, Short.MAX_VALUE)
         );
 
         jPanel2.setBackground(new java.awt.Color(250, 243, 176));
@@ -194,19 +197,19 @@ public class Interfaz extends javax.swing.JFrame {
             }
         });
 
-        btn_agregar1.setBackground(new java.awt.Color(250, 243, 176));
-        btn_agregar1.setText("Quitar P");
-        btn_agregar1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btn_quitar.setBackground(new java.awt.Color(250, 243, 176));
+        btn_quitar.setText("Quitar P");
+        btn_quitar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn_agregar1MouseEntered(evt);
+                btn_quitarMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn_agregar1MouseExited(evt);
+                btn_quitarMouseExited(evt);
             }
         });
-        btn_agregar1.addActionListener(new java.awt.event.ActionListener() {
+        btn_quitar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_agregar1ActionPerformed(evt);
+                btn_quitarActionPerformed(evt);
             }
         });
 
@@ -240,7 +243,7 @@ public class Interfaz extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(sp_K))
                                     .addComponent(btn_agregar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(btn_agregar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btn_quitar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(16, 16, 16))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -276,7 +279,7 @@ public class Interfaz extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(sp_y_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(17, 17, 17)
-                .addComponent(btn_agregar1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_quitar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -285,7 +288,7 @@ public class Interfaz extends javax.swing.JFrame {
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_clasidicar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -293,14 +296,18 @@ public class Interfaz extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(panel_obj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_obj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panel_obj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -406,7 +413,7 @@ public class Interfaz extends javax.swing.JFrame {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        
+
         // objetos.add(onjeto_agregado);
     }//GEN-LAST:event_btn_agregarActionPerformed
 
@@ -419,7 +426,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_clasidicarMouseExited
 
     private void btn_clasidicarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clasidicarActionPerformed
-
+        System.out.println(objetos.size());
         // calcular distancia para cada uno de los objetos
         try {
             for (int i = 0; i < objetos.size(); i++) {
@@ -461,11 +468,9 @@ public class Interfaz extends javax.swing.JFrame {
 
         if (claseGanadora != null) {
             System.out.println("¡La clase ganadora es: " + claseGanadora + "!");
-            mostrarGanador(buscarColor(claseGanadora), claseGanadora);
+            mostrarGanador(buscarColor(claseGanadora), claseGanadora, claseGanadora);
         } else {
-            mostrarGanador(Color.white, "¡Hay un empate!");
             JOptionPane.showMessageDialog(null, "¡Hay un empate o no hay un ganador claro!", "Advertencia", JOptionPane.WARNING_MESSAGE);
-
 
             System.out.println("¡Hay un empate o no hay un ganador claro!");
             // se envia los k vecinos mas cercanos y se calcula su distancia promedio por clase
@@ -491,7 +496,7 @@ public class Interfaz extends javax.swing.JFrame {
         if (objeto_agregado != null) {
             quitar_punto_agregado();
         }
-        
+
         int x = evt.getX();
         int y = evt.getY();
         objeto_agregado = new objeto(panel_obj, Color.black, x, y);
@@ -504,17 +509,19 @@ public class Interfaz extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_panel_objMouseClicked
 
-    private void btn_agregar1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_agregar1MouseEntered
+    private void btn_quitarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_quitarMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_btn_agregar1MouseEntered
+    }//GEN-LAST:event_btn_quitarMouseEntered
 
-    private void btn_agregar1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_agregar1MouseExited
+    private void btn_quitarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_quitarMouseExited
         // TODO add your handling code here:
-    }//GEN-LAST:event_btn_agregar1MouseExited
+    }//GEN-LAST:event_btn_quitarMouseExited
 
-    private void btn_agregar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_agregar1ActionPerformed
-        quitar_punto_agregado();
-    }//GEN-LAST:event_btn_agregar1ActionPerformed
+    private void btn_quitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_quitarActionPerformed
+        if (objeto_agregado != null) {
+            quitar_punto_agregado();
+        }
+    }//GEN-LAST:event_btn_quitarActionPerformed
 
     //
     private static ArrayList<objeto> seleccionarVotantes(ArrayList<objeto> objetos, int k) {
@@ -595,7 +602,7 @@ public class Interfaz extends javax.swing.JFrame {
 
         System.out.println("La clase con la distancia promedio más baja es: " + claseDistanciaMenor);
         System.out.println("Distancia Promedio más baja: " + distanciaMenor);
-        mostrarGanador(buscarColor(claseDistanciaMenor), "La clase con la distancia promedio más baja es la " + claseDistanciaMenor + "= " + distanciaMenor);
+        mostrarGanador(buscarColor(claseDistanciaMenor), "La clase con la distancia promedio más baja es la " + claseDistanciaMenor + "= " + distanciaMenor, claseDistanciaMenor);
 
     }
 
@@ -668,7 +675,7 @@ public class Interfaz extends javax.swing.JFrame {
 
     }
 
-    public static void mostrarGanador(Color colorDeFondo, String mensaje) {
+    public static void mostrarGanador(Color colorDeFondo, String mensaje, String clase) {
 
         Color colorDeTexto = Color.BLACK; // Color de texto personalizado
 
@@ -682,24 +689,59 @@ public class Interfaz extends javax.swing.JFrame {
         panel.add(label);
 
         JOptionPane.showMessageDialog(null, panel, "Clasificación", JOptionPane.PLAIN_MESSAGE);
-        
+
         objeto o = new objeto(panel_obj, colorDeFondo, objeto_agregado.getX_objeto(), objeto_agregado.getY_objeto());
         o.start();
+
+        o.setClase(mensaje);
+        // contar como nuevo
+        objetos.add(o);
+
         objeto_agregado = null;
     }
 
-    public void quitar_punto_agregado(){
+    public void quitar_punto_agregado() {
         objeto obj_temp = new objeto(panel_obj, Color.yellow, objeto_agregado.getX_objeto(), objeto_agregado.getY_objeto());
         obj_temp.clearCircle();
         objeto_agregado = null;
     }
-    
+
+    private static void drawLabeledGrid(JPanel panel) {
+        panel.add(new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                int interval = 50; // Tamaño del intervalo de la cuadrícula
+                int width = getWidth();
+                int height = getHeight();
+
+                g.setColor(Color.RED);
+
+                // Dibujar líneas horizontales y agregar etiquetas
+                for (int y = 0; y <= height; y += interval) {
+                    g.drawLine(0, y, width, y);
+                    g.drawString(Integer.toString(y), 5, y + 12); // Etiqueta en el lado izquierdo
+                }
+
+                // Dibujar líneas verticales y agregar etiquetas
+                for (int x = 0; x <= width; x += interval) {
+                    g.drawLine(x, 0, x, height);
+                    g.drawString(Integer.toString(x), x + 5, 12); // Etiqueta en la parte superior
+                }
+            }
+        });
+        
+        panel.repaint();
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_agregar;
-    private javax.swing.JButton btn_agregar1;
     private javax.swing.JButton btn_clasidicar;
     private javax.swing.JButton btn_generar;
     private javax.swing.JButton btn_limpiar;
+    private javax.swing.JButton btn_quitar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
