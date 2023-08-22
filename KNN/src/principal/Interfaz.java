@@ -2,6 +2,8 @@ package principal;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,13 +23,13 @@ public class Interfaz extends javax.swing.JFrame {
     }
 
     // punto agregado
-    objeto objeto_agregado = null;
+    static objeto objeto_agregado = null;
 
     private int numClases;
     private int numObjectosPorClase;
 
     private Random random = new Random();
-    private  static ArrayList<objeto> objetos = new ArrayList<>();
+    private static ArrayList<objeto> objetos = new ArrayList<>();
     private ArrayList<String> clases = new ArrayList<>();
     private ArrayList<Color> colores = new ArrayList<>();
     private ArrayList<Integer> x_area = new ArrayList<>();
@@ -59,6 +61,7 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         sp_K = new javax.swing.JSpinner();
         btn_clasidicar = new javax.swing.JButton();
+        btn_agregar1 = new javax.swing.JButton();
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("X ");
@@ -73,6 +76,12 @@ public class Interfaz extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         panel_obj.setBackground(new java.awt.Color(236, 236, 236));
+        panel_obj.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        panel_obj.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panel_objMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel_objLayout = new javax.swing.GroupLayout(panel_obj);
         panel_obj.setLayout(panel_objLayout);
@@ -106,7 +115,7 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Clases");
 
-        sp_clases.setModel(new javax.swing.SpinnerNumberModel(2, 2, 5, 1));
+        sp_clases.setModel(new javax.swing.SpinnerNumberModel(2, 2, null, 1));
         sp_clases.setFocusable(false);
         sp_clases.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -117,7 +126,7 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Objetos");
 
-        sp_objetos.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
+        sp_objetos.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
         sp_objetos.setFocusable(false);
         sp_objetos.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -185,47 +194,63 @@ public class Interfaz extends javax.swing.JFrame {
             }
         });
 
+        btn_agregar1.setBackground(new java.awt.Color(250, 243, 176));
+        btn_agregar1.setText("Quitar P");
+        btn_agregar1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn_agregar1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn_agregar1MouseExited(evt);
+            }
+        });
+        btn_agregar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_agregar1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(sp_clases)
-                            .addComponent(sp_objetos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(3, 3, 3))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(9, 9, 9)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(btn_limpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btn_generar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(25, 25, 25)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6))
-                                .addGap(21, 21, 21)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(sp_y_nuevo)
-                                    .addComponent(sp_x_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(btn_generar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel6))
+                                        .addGap(21, 21, 21)
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(sp_y_nuevo)
+                                            .addComponent(sp_x_nuevo)))))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btn_clasidicar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(sp_K))
+                                    .addComponent(btn_agregar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btn_agregar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(16, 16, 16))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_clasidicar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jLabel7)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(sp_K))
-                                .addComponent(btn_agregar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(16, Short.MAX_VALUE))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sp_objetos)
+                            .addComponent(sp_clases))
+                        .addGap(6, 6, 6))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -240,9 +265,9 @@ public class Interfaz extends javax.swing.JFrame {
                     .addComponent(sp_objetos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btn_generar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_limpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(sp_x_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -250,7 +275,9 @@ public class Interfaz extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(sp_y_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(17, 17, 17)
+                .addComponent(btn_agregar1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -368,6 +395,9 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_agregarMouseExited
 
     private void btn_agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_agregarActionPerformed
+        if (objeto_agregado != null) {
+            quitar_punto_agregado();
+        }
         objeto_agregado = new objeto(panel_obj, Color.black, (int) sp_x_nuevo.getValue(), (int) sp_y_nuevo.getValue());
 
         try {
@@ -376,9 +406,8 @@ public class Interfaz extends javax.swing.JFrame {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        
         // objetos.add(onjeto_agregado);
-
     }//GEN-LAST:event_btn_agregarActionPerformed
 
     private void btn_clasidicarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_clasidicarMouseEntered
@@ -434,7 +463,9 @@ public class Interfaz extends javax.swing.JFrame {
             System.out.println("¡La clase ganadora es: " + claseGanadora + "!");
             mostrarGanador(buscarColor(claseGanadora), claseGanadora);
         } else {
-            mostrarGanador(Color.white, "¡Hay un empate o no hay un ganador claro!");
+            mostrarGanador(Color.white, "¡Hay un empate!");
+            JOptionPane.showMessageDialog(null, "¡Hay un empate o no hay un ganador claro!", "Advertencia", JOptionPane.WARNING_MESSAGE);
+
 
             System.out.println("¡Hay un empate o no hay un ganador claro!");
             // se envia los k vecinos mas cercanos y se calcula su distancia promedio por clase
@@ -445,16 +476,45 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_clasidicarActionPerformed
 
     private void sp_clasesStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sp_clasesStateChanged
-        int max = (int) sp_clases.getValue() * (int) sp_objetos.getValue() ;
+        int max = (int) sp_clases.getValue() * (int) sp_objetos.getValue();
         SpinnerNumberModel spinnerModel_x = new SpinnerNumberModel(1, 1, max, 1);
         sp_K.setModel(spinnerModel_x);
     }//GEN-LAST:event_sp_clasesStateChanged
 
     private void sp_objetosStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sp_objetosStateChanged
-        int max = (int) sp_clases.getValue() * (int) sp_objetos.getValue() ;
+        int max = (int) sp_clases.getValue() * (int) sp_objetos.getValue();
         SpinnerNumberModel spinnerModel_x = new SpinnerNumberModel(1, 1, max, 1);
         sp_K.setModel(spinnerModel_x);
     }//GEN-LAST:event_sp_objetosStateChanged
+
+    private void panel_objMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_objMouseClicked
+        if (objeto_agregado != null) {
+            quitar_punto_agregado();
+        }
+        
+        int x = evt.getX();
+        int y = evt.getY();
+        objeto_agregado = new objeto(panel_obj, Color.black, x, y);
+
+        try {
+            objeto_agregado.start();
+            objeto_agregado.join(); // Espera a que el hilo termine
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_panel_objMouseClicked
+
+    private void btn_agregar1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_agregar1MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_agregar1MouseEntered
+
+    private void btn_agregar1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_agregar1MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_agregar1MouseExited
+
+    private void btn_agregar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_agregar1ActionPerformed
+        quitar_punto_agregado();
+    }//GEN-LAST:event_btn_agregar1ActionPerformed
 
     //
     private static ArrayList<objeto> seleccionarVotantes(ArrayList<objeto> objetos, int k) {
@@ -514,7 +574,6 @@ public class Interfaz extends javax.swing.JFrame {
         }
 
         // Calcular la distancia promedio y encontrar la distancia menor con la clase correspondiente
-        
         float distanciaMenor = Float.MAX_VALUE; // Inicializar la DISTANCIA garantiza que cualquier valor calculado y comparado posteriormente será menor que este valor inicial. 
         String claseDistanciaMenor = null;
 
@@ -536,8 +595,8 @@ public class Interfaz extends javax.swing.JFrame {
 
         System.out.println("La clase con la distancia promedio más baja es: " + claseDistanciaMenor);
         System.out.println("Distancia Promedio más baja: " + distanciaMenor);
-        mostrarGanador(buscarColor(claseDistanciaMenor), "La clase con la distancia promedio más baja es la " + claseDistanciaMenor+ "= "+distanciaMenor);
-        
+        mostrarGanador(buscarColor(claseDistanciaMenor), "La clase con la distancia promedio más baja es la " + claseDistanciaMenor + "= " + distanciaMenor);
+
     }
 
     public static Color buscarColor(String clase) {
@@ -603,12 +662,10 @@ public class Interfaz extends javax.swing.JFrame {
 
         JSpinner.DefaultEditor spinnerEditor_y1 = (JSpinner.DefaultEditor) sp_objetos.getEditor();
         spinnerEditor_y1.getTextField().setEditable(false);
-        
-        
+
         SpinnerNumberModel spinnerModel_K = new SpinnerNumberModel(1, 1, panel_obj.getWidth(), 1);
         sp_K.setModel(spinnerModel_K);
-        
-   
+
     }
 
     public static void mostrarGanador(Color colorDeFondo, String mensaje) {
@@ -625,10 +682,21 @@ public class Interfaz extends javax.swing.JFrame {
         panel.add(label);
 
         JOptionPane.showMessageDialog(null, panel, "Clasificación", JOptionPane.PLAIN_MESSAGE);
+        
+        objeto o = new objeto(panel_obj, colorDeFondo, objeto_agregado.getX_objeto(), objeto_agregado.getY_objeto());
+        o.start();
+        objeto_agregado = null;
     }
 
+    public void quitar_punto_agregado(){
+        objeto obj_temp = new objeto(panel_obj, Color.yellow, objeto_agregado.getX_objeto(), objeto_agregado.getY_objeto());
+        obj_temp.clearCircle();
+        objeto_agregado = null;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_agregar;
+    private javax.swing.JButton btn_agregar1;
     private javax.swing.JButton btn_clasidicar;
     private javax.swing.JButton btn_generar;
     private javax.swing.JButton btn_limpiar;
@@ -640,7 +708,7 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel panel_obj;
+    private static javax.swing.JPanel panel_obj;
     private javax.swing.JSpinner sp_K;
     private javax.swing.JSpinner sp_clases;
     private javax.swing.JSpinner sp_objetos;

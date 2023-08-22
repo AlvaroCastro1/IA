@@ -149,7 +149,14 @@ public class objeto extends Thread implements Comparable<objeto> {
         g.fillOval(x_objeto, y_objeto, 50, 50); // tamaño del círculo
         g.setColor(Color.BLACK);
         // g.drawString(clase, x + 10, y + 30); // colocar el nombre de la clase
-    }  
+    }
+    
+    public void clearCircle() {
+        Graphics g = panel.getGraphics();
+        g.setColor(panel.getBackground()); // Usa el color de fondo del panel para borrar
+        int radio = 6;
+        g.fillOval(x_objeto - radio, y_objeto - radio, radio * 2, radio * 2);
+    }
     
     public void run() {
         Graphics g = panel.getGraphics();
