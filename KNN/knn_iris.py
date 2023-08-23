@@ -4,8 +4,10 @@ from sklearn.datasets import load_iris      #BD
 from sklearn.model_selection import train_test_split   #Dividir train/test 80%-20%  90%-10%
 from sklearn.neighbors import KNeighborsClassifier
 
+nuevos_datos = 
+
 db_iris = load_iris()       #Cargar BD
-print(type(db_iris))
+print(type(db_iris))        # bunch solo Sklearn
 
 print( db_iris.keys() )         #llaves del diccionario
 
@@ -45,3 +47,5 @@ print(clasif, " = ", db_iris['target_names'][clasif])
 clasif = knn.predict( [[7.0, 3.0, 5.0, 2.3]] )  #Nuevo patrón
 print(clasif, " = ", db_iris['target_names'][clasif])
 
+# clasif = knn.predict( [[4.1, 3.4, 1.6, 1.1]] )  # Setosa
+# print(clasif, " = ", db_iris['target_names'][clasif])
