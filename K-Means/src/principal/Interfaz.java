@@ -1,10 +1,8 @@
 package principal;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.swing.JPanel;
 import javax.swing.SpinnerNumberModel;
 
 public class Interfaz extends javax.swing.JFrame {
@@ -18,6 +16,8 @@ public class Interfaz extends javax.swing.JFrame {
 
     private static ArrayList<Objeto> objetos = new ArrayList<>();
     private static ArrayList<Objeto> centroides = new ArrayList<>();
+    
+    private static ArrayList<Color> colores_clusters = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -261,7 +261,24 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_clasidicarMouseExited
 
     private void btn_clasidicarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clasidicarActionPerformed
-        System.out.println(objetos.size());
+
+        int numClusters = (int) sp_K.getValue();
+        
+        
+        for (int i = 0; i < numClusters; i++) {
+            colores_clusters.add(new Color( Numero_Random(0, 255), Numero_Random(0, 255), Numero_Random(0, 255) ));
+        }
+
+        ArrayList<Cluster> clusters = kMeans(objetos, centroides);
+
+        for (int i = 0; i < clusters.size(); i++) {
+            System.out.println("Cluster " + i + " Centroide: (" + clusters.get(i).centroide.getX() + ", " + clusters.get(i).centroide.getY() + ")");
+            System.out.println("Puntos en el cluster:");
+            for (Objeto punto : clusters.get(i).puntos) {
+                System.out.println("(" + punto.getX() + ", " + punto.getY() + ")");
+            }
+            System.out.println();
+        }
     }//GEN-LAST:event_btn_clasidicarActionPerformed
 
     private void sp_objetosStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sp_objetosStateChanged
@@ -287,15 +304,6 @@ public class Interfaz extends javax.swing.JFrame {
 
         sp_K.setValue(centroides.size());
     }//GEN-LAST:event_panel_objMouseClicked
-
-    //
-    private static ArrayList<Objeto> seleccionarVotantes(ArrayList<Objeto> objetos, int k) {
-        ArrayList<Objeto> votantesSeleccionados = new ArrayList<>();
-        for (int i = 0; i < k && i < objetos.size(); i++) {
-            votantesSeleccionados.add(objetos.get(i));
-        }
-        return votantesSeleccionados;
-    }
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -339,35 +347,6 @@ public class Interfaz extends javax.swing.JFrame {
 
     }
 
-    private static void drawLabeledGrid(JPanel panel) {
-        panel.add(new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-
-                int interval = 50; // Tamaño del intervalo de la cuadrícula
-                int width = getWidth();
-                int height = getHeight();
-
-                g.setColor(Color.RED);
-
-                // Dibujar líneas horizontales y agregar etiquetas
-                for (int y = 0; y <= height; y += interval) {
-                    g.drawLine(0, y, width, y);
-                    g.drawString(Integer.toString(y), 5, y + 12); // Etiqueta en el lado izquierdo
-                }
-
-                // Dibujar líneas verticales y agregar etiquetas
-                for (int x = 0; x <= width; x += interval) {
-                    g.drawLine(x, 0, x, height);
-                    g.drawString(Integer.toString(x), x + 5, 12); // Etiqueta en la parte superior
-                }
-            }
-        });
-
-        panel.repaint();
-    }
-
     public static int Numero_Random(int min, int max) {
         if (min >= max) {
             throw new IllegalArgumentException("El primer número debe ser menor que el segundo número.");
@@ -377,7 +356,75 @@ public class Interfaz extends javax.swing.JFrame {
         return random.nextInt(max - min + 1) + min;
     }
 
+    public static ArrayList<Cluster> kMeans(ArrayList<Objeto> objetos_del_panel, ArrayList<Objeto> centroides_del_panel) {
+        ArrayList<Cluster> clusters = new ArrayList<>();
 
+        // Inicializar clusters con centroides iniciales
+        for (int i = 0; i < centroides_del_panel.size(); i++) {
+            Cluster cluster_temp = new Cluster(centroides_del_panel.get(i));
+            cluster_temp.setColor_identificador(colores_clusters.get(i));
+            clusters.add(cluster_temp);
+        }
+
+        // variable que verifica si ha llegado a una posible solucion al no haber cambios en el centroide final
+        boolean convergencia = false;
+        while (!convergencia) {
+            // Asignar puntos a clusters
+                // primero nos aseguramos de no mantener puntos guardados 
+            for (Cluster cluster : clusters) {
+                cluster.getPuntos().clear();
+            }
+            // buscamos el cluster mas cercano a cada punto
+            for (Objeto objeto : objetos_del_panel) {
+                
+                Cluster clusterMasCercano = null;
+                
+                double distanciaMinima = Double.MAX_VALUE;
+                
+                for (Cluster cluster : clusters) {
+                    double distancia = calcularDistancia(objeto, cluster.centroide);
+                    // empezamos en 0
+                    if (distancia < distanciaMinima) {
+                        // la distancia actual es mas pequeña que la anterior
+                        distanciaMinima = distancia;
+                        clusterMasCercano = cluster;
+                    }
+                }
+                clusterMasCercano.puntos.add(objeto);
+                // pintamos los puntos del color de su cluster temporal
+                Objeto temp = new Objeto(panel_obj, clusterMasCercano.getColor_identificador(), objeto.getX(), objeto.getY());
+                temp.setRadio(5);
+                temp.start();
+            }
+
+            // Actualizar centroides y verificar convergencia
+            convergencia = true;
+            for (Cluster cluster : clusters) {
+                double sumaX = 0, sumaY = 0;
+                for (Objeto punto : cluster.puntos) {
+                    sumaX += punto.getX();
+                    sumaY += punto.getY();
+                }
+                Objeto nuevoCentroide = new Objeto( (int) sumaX / cluster.puntos.size(), (int) sumaY / cluster.puntos.size());
+                if (calcularDistancia(nuevoCentroide, cluster.centroide) > 0.01) {
+                    convergencia = false;
+                }
+                cluster.centroide = nuevoCentroide;
+                // pintar nuevo centroide
+                Objeto temp = new Objeto(panel_obj, Color.GREEN, cluster.centroide.getX(), cluster.centroide.getY());
+                temp.start();
+            }
+        }
+
+        return clusters;
+    }
+
+    
+    public static double calcularDistancia(Objeto p1, Objeto p2) {
+        double dx = p1.getX() - p2.getX();
+        double dy = p1.getX() - p2.getX();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_clasidicar;
     private javax.swing.JButton btn_generar;
@@ -393,38 +440,5 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JSpinner sp_x_punto;
     private javax.swing.JSpinner sp_y_punto;
     // End of variables declaration//GEN-END:variables
-
-}
-
-// clase dedicada a calcular la distancia entre el punto y cada punto de las clases
-class Calculador_de_Distancia extends Thread {
-
-    public Objeto obj1, obj2;
-    public float distancia;
-
-    public Calculador_de_Distancia(Objeto obj1, Objeto obj2) {
-        this.obj1 = obj1;
-        this.obj2 = obj2;
-    }
-
-    public float getDistancia() {
-        return distancia;
-    }
-
-    public void setDistancia(float distancia) {
-        this.distancia = distancia;
-    }
-
-    public void run() {
-        int x1 = obj1.getX();
-        int y1 = obj1.getY();
-        int x2 = obj2.getX();
-        int y2 = obj2.getY();
-
-        int dx = x2 - x1;
-        int dy = y2 - y1;
-
-        this.setDistancia((float) Math.sqrt(dx * dx + dy * dy));
-    }
 
 }

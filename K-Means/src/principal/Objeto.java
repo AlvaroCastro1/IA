@@ -17,6 +17,11 @@ public class Objeto extends Thread {
     private int x, y;
     private float distancia;
     int radio = 6;
+    
+    public Objeto(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
     @Override
     public String toString() {
