@@ -3,6 +3,8 @@ package principal;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SpinnerNumberModel;
 
 public class Interfaz extends javax.swing.JFrame {
@@ -10,6 +12,7 @@ public class Interfaz extends javax.swing.JFrame {
     public Interfaz() {
         initComponents();
         setear_spiner();
+        generar_10_color();
     }
 
     private int numObjetos;
@@ -261,20 +264,20 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_clasidicarMouseExited
 
     private void btn_clasidicarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clasidicarActionPerformed
-
+        // K clusters
         int numClusters = (int) sp_K.getValue();
         
-        
-        for (int i = 0; i < numClusters; i++) {
+        // generar k colores para cada cluster
+        for (int i = colores_clusters.size() -1; i < numClusters; i++) {
             colores_clusters.add(new Color( Numero_Random(0, 255), Numero_Random(0, 255), Numero_Random(0, 255) ));
         }
-
+        
         ArrayList<Cluster> clusters = kMeans(objetos, centroides);
 
         for (int i = 0; i < clusters.size(); i++) {
             System.out.println("Cluster " + i + " Centroide: (" + clusters.get(i).centroide.getX() + ", " + clusters.get(i).centroide.getY() + ")");
             System.out.println("Puntos en el cluster:");
-            for (Objeto punto : clusters.get(i).puntos) {
+            for (Objeto punto : clusters.get(i).getObjetos_cluster()) {
                 System.out.println("(" + punto.getX() + ", " + punto.getY() + ")");
             }
             System.out.println();
@@ -313,7 +316,7 @@ public class Interfaz extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Linux".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -356,13 +359,39 @@ public class Interfaz extends javax.swing.JFrame {
         return random.nextInt(max - min + 1) + min;
     }
 
-    public static ArrayList<Cluster> kMeans(ArrayList<Objeto> objetos_del_panel, ArrayList<Objeto> centroides_del_panel) {
+// esta funcion se encargara de hacer todo el proceso 
+// para asignar a cada cluster los objetos mas cercanos
+
+// devuelve un arrayL con los cluster
+// cluster contiene una lista de objetos
+
+// necesita a los objetos randoms
+// y los centroides que ha ingresado el usuario
+
+
+public void generar_10_color(){
+    colores_clusters.add( Color.ORANGE );
+    colores_clusters.add( Color.decode("#77dd77") );
+    colores_clusters.add( Color.PINK );
+    colores_clusters.add( Color.MAGENTA );
+    colores_clusters.add( Color.decode("#590000") );
+    colores_clusters.add( Color.LIGHT_GRAY );
+    colores_clusters.add( Color.decode("#84b6f4") );
+    colores_clusters.add( Color.gray );
+    colores_clusters.add( Color.decode("#c5d084") );
+    colores_clusters.add( Color.decode("#008a5f") );
+}
+
+public static ArrayList<Cluster> kMeans(ArrayList<Objeto> objetos_del_panel, ArrayList<Objeto> centroides_del_panel) {
         ArrayList<Cluster> clusters = new ArrayList<>();
 
         // Inicializar clusters con centroides iniciales
         for (int i = 0; i < centroides_del_panel.size(); i++) {
+            // nuevo cluster                    recibe el centoide
             Cluster cluster_temp = new Cluster(centroides_del_panel.get(i));
+            // color unico
             cluster_temp.setColor_identificador(colores_clusters.get(i));
+            // lista de clusters
             clusters.add(cluster_temp);
         }
 
@@ -372,59 +401,80 @@ public class Interfaz extends javax.swing.JFrame {
             // Asignar puntos a clusters
                 // primero nos aseguramos de no mantener puntos guardados 
             for (Cluster cluster : clusters) {
-                cluster.getPuntos().clear();
-            }
-            // buscamos el cluster mas cercano a cada punto
-            for (Objeto objeto : objetos_del_panel) {
-                
-                Cluster clusterMasCercano = null;
-                
-                double distanciaMinima = Double.MAX_VALUE;
-                
-                for (Cluster cluster : clusters) {
-                    double distancia = calcularDistancia(objeto, cluster.centroide);
-                    // empezamos en 0
-                    if (distancia < distanciaMinima) {
-                        // la distancia actual es mas pequeña que la anterior
-                        distanciaMinima = distancia;
-                        clusterMasCercano = cluster;
-                    }
-                }
-                clusterMasCercano.puntos.add(objeto);
-                // pintamos los puntos del color de su cluster temporal
-                Objeto temp = new Objeto(panel_obj, clusterMasCercano.getColor_identificador(), objeto.getX(), objeto.getY());
-                temp.setRadio(5);
-                temp.start();
+                cluster.getObjetos_cluster().clear();
             }
 
-            // Actualizar centroides y verificar convergencia
+            buscar_y_asignar_mas_cercano(clusters, objetos);
+
+            // Calcular el promedio de X & Y
             convergencia = true;
             for (Cluster cluster : clusters) {
                 double sumaX = 0, sumaY = 0;
-                for (Objeto punto : cluster.puntos) {
+                for (Objeto punto : cluster.getObjetos_cluster()) {
                     sumaX += punto.getX();
                     sumaY += punto.getY();
                 }
-                Objeto nuevoCentroide = new Objeto( (int) sumaX / cluster.puntos.size(), (int) sumaY / cluster.puntos.size());
-                if (calcularDistancia(nuevoCentroide, cluster.centroide) > 0.01) {
+                // crear un objeto para ver si existe una gran diferencia entre el old_centoride y new_centoride
+                Objeto nuevoCentroide = new Objeto( (int) sumaX / cluster.getObjetos_cluster().size(), (int) sumaY / cluster.getObjetos_cluster().size());
+                // va a regresar un DOUBLE pero al graficarlo solo ocupa la parte ENTERA
+                if (calcularDistancia(nuevoCentroide, cluster.centroide) > 0.1) {
+                    // exite una diferencia significativa, entonces se vuelve a repetir el proceso
                     convergencia = false;
                 }
-                cluster.centroide = nuevoCentroide;
+                cluster.setCentroide(nuevoCentroide);
                 // pintar nuevo centroide
-                Objeto temp = new Objeto(panel_obj, Color.GREEN, cluster.centroide.getX(), cluster.centroide.getY());
+
+                Objeto temp = new Objeto(panel_obj, cluster.getColor_identificador(), cluster.getCentroide().getX(), cluster.getCentroide().getY());
+                temp.setRadio(9);
                 temp.start();
+                // otro para 
+                Objeto centro = new Objeto(panel_obj, Color.red, cluster.getCentroide().getX(), cluster.getCentroide().getY());
+                centro.setRadio(2);
+                centro.start();
             }
         }
 
         return clusters;
     }
 
-    
+    public static void buscar_y_asignar_mas_cercano(ArrayList<Cluster> clusters, ArrayList<Objeto> objetos ){
+
+        for (Objeto objeto : objetos) {
+
+            Cluster clusterMasCercano = null;
+
+            double distanciaMinima = Double.MAX_VALUE;
+
+            // comparamos el objeto actual con cada cluster
+            for (Cluster cluster : clusters) {
+                double distancia = calcularDistancia(objeto, cluster.getCentroide());
+                // empezamos en 0
+                if (distancia < distanciaMinima) {
+                    // la distancia actual es mas pequeña que la anterior
+                    distanciaMinima = distancia;
+                    clusterMasCercano = cluster;
+                }
+            }
+            clusterMasCercano.getObjetos_cluster().add(objeto);
+            // pintamos los puntos del color de su cluster temporal
+            Objeto temp = new Objeto(panel_obj, clusterMasCercano.getColor_identificador(), objeto.getX(), objeto.getY());
+            temp.setRadio(5);
+            temp.start();
+            // hacemos una pausa pequeña para ver el movimiento de cada objeto
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Interfaz.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
     public static double calcularDistancia(Objeto p1, Objeto p2) {
         double dx = p1.getX() - p2.getX();
         double dy = p1.getX() - p2.getX();
         return Math.sqrt(dx * dx + dy * dy);
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_clasidicar;
     private javax.swing.JButton btn_generar;

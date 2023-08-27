@@ -5,14 +5,16 @@ import java.util.ArrayList;
 import principal.Objeto;
 
 public class Cluster {
-
+    // lo representa un centoide
     Objeto centroide;
-    ArrayList<Objeto> puntos;
+    // se le  los puntos mas cercanos
+    ArrayList<Objeto> objetos_cluster;
+    // tiene un color la clase o cluster
     Color color_identificador;
 
     public Cluster(Objeto centroide) {
         this.centroide = centroide;
-        this.puntos = new ArrayList<>();
+        this.objetos_cluster = new ArrayList<>();
     }
 
     public Color getColor_identificador() {
@@ -31,11 +33,11 @@ public class Cluster {
         this.centroide = centroide;
     }
 
-    public ArrayList<Objeto> getPuntos() {
-        return puntos;
+    public ArrayList<Objeto> getObjetos_cluster() {
+        return objetos_cluster;
     }
 
-    public void setPuntos(ArrayList<Objeto> puntos) {
-        this.puntos = puntos;
+    public void setObjetos_cluster(ArrayList<Objeto> objetos_cluster) {
+        this.objetos_cluster = objetos_cluster;
     }
 }

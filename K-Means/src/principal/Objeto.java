@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 public class Objeto extends Thread {
     
     private JPanel panel;
-    private String cluster;
+    //private String cluster;
     private Color color;
     private int x, y;
     private float distancia;
@@ -25,7 +25,7 @@ public class Objeto extends Thread {
 
     @Override
     public String toString() {
-        return "Objeto{" + "panel=" + panel + ", cluster=" + cluster + ", color=" + color + ", x=" + x + ", y=" + y + ", distancia=" + distancia + ", radio=" + radio + '}';
+        return "Objeto{" + "panel=" + panel + ", color=" + color + ", x=" + x + ", y=" + y + ", distancia=" + distancia + ", radio=" + radio + '}';
     }
 
     public Objeto(JPanel panel, Color color, int x, int y) {
@@ -41,14 +41,6 @@ public class Objeto extends Thread {
 
     public void setPanel(JPanel panel) {
         this.panel = panel;
-    }
-
-    public String getCluster() {
-        return cluster;
-    }
-
-    public void setClase(String cluster) {
-        this.cluster = cluster;
     }
 
     public Color getColor() {
