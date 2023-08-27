@@ -10,7 +10,10 @@ from sklearn.neighbors import KNeighborsClassifier
 archivo = './KNN/Iris_DB.csv'
 
 
-
+# Longitud del sépalo: de 3.5 a 4.5
+# Ancho del sépalo: de 1.0 a 1.5
+# Longitud del pétalo: de 2.0 a 3.0
+# Ancho del pétalo: de 0.5 a 1.0
 
 dataFrame = pd.read_csv(archivo)
 

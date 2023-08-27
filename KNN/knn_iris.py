@@ -4,7 +4,6 @@ from sklearn.datasets import load_iris      #BD
 from sklearn.model_selection import train_test_split   #Dividir train/test 80%-20%  90%-10%
 from sklearn.neighbors import KNeighborsClassifier
 
-nuevos_datos = 
 
 db_iris = load_iris()       #Cargar BD
 print(type(db_iris))        # bunch solo Sklearn
