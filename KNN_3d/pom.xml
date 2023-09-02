@@ -17,5 +17,12 @@
             <artifactId>JMathPlot</artifactId>
             <version>1.0.1</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.5</version> <!-- Puedes verificar la última versión en el repositorio Maven -->
+        </dependency>
+
     </dependencies>
 </project>

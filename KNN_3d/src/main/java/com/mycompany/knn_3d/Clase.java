@@ -15,6 +15,23 @@ public class Clase {
     String nom_clase;
     Color color;
 
+    public Clase(double[] x, double[] y, double[] z, String nom_clase, Color color) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.nom_clase = nom_clase;
+        this.color = color;
+    }
+    
+    public void generar_objetos(){
+        objeto[] temp = new objeto[x.length];
+        for (int i = 0; i < x.length; i++) {
+            objeto o_temp = new objeto(nom_clase, color, x[i], y[i], x[i]);
+            temp[i] = o_temp;
+        }
+        this.objetos = temp;
+    }
+
     @Override
     public String toString() {
         return "Clase{" + "nom_clase=" + nom_clase + " con "+ objetos.length + " objetos en total";

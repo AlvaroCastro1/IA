@@ -8,10 +8,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SpinnerNumberModel;
+
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
 
 public class Interfaz extends javax.swing.JFrame {
 
@@ -19,7 +27,6 @@ public class Interfaz extends javax.swing.JFrame {
         initComponents();
         generar_10_colores();
     }
-    
 
     // punto agregado
     static objeto objeto_agregado = null;
@@ -28,23 +35,21 @@ public class Interfaz extends javax.swing.JFrame {
     private int numObjectosPorClase;
 
     private Random random = new Random();
-    
+
     private ArrayList<String> nombre_clases = new ArrayList<>();
     private ArrayList<Color> colores = new ArrayList<>();
-    
+
     private ArrayList<Integer> x_area = new ArrayList<>();
     private ArrayList<Integer> y_area = new ArrayList<>();
     private ArrayList<Integer> x_area_long = new ArrayList<>();
     private ArrayList<Integer> y_area_long = new ArrayList<>();
-    
+
     private static ArrayList<objeto> objetos = new ArrayList<>();
 
     private double a = 0.0;
     private double b = 16.0;
-    
-    public static Clase[] clases;
-    
 
+    public static Clase[] clases;
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -61,16 +66,17 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         sp_objetos = new javax.swing.JSpinner();
         btn_limpiar = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
         sp_x_nuevo = new javax.swing.JSpinner();
-        jLabel6 = new javax.swing.JLabel();
         sp_y_nuevo = new javax.swing.JSpinner();
         btn_agregar = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         sp_K = new javax.swing.JSpinner();
         btn_clasidicar = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
         sp_z_nuevo = new javax.swing.JSpinner();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        btn_generar_csv = new javax.swing.JButton();
         panel_obj_3D = new org.math.plot.Plot3DPanel();
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
@@ -141,15 +147,9 @@ public class Interfaz extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel5.setText("X");
+        sp_x_nuevo.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
 
-        sp_x_nuevo.setModel(new javax.swing.SpinnerNumberModel(10, 10, null, 1));
-
-        jLabel6.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Y");
-
-        sp_y_nuevo.setModel(new javax.swing.SpinnerNumberModel(10, 10, null, 1));
+        sp_y_nuevo.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
 
         btn_agregar.setBackground(new java.awt.Color(250, 243, 176));
         btn_agregar.setText("Agregar");
@@ -169,6 +169,8 @@ public class Interfaz extends javax.swing.JFrame {
 
         jLabel7.setText("K");
 
+        sp_K.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+
         btn_clasidicar.setBackground(new java.awt.Color(250, 243, 176));
         btn_clasidicar.setText("Clasificar");
         btn_clasidicar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -185,10 +187,32 @@ public class Interfaz extends javax.swing.JFrame {
             }
         });
 
+        sp_z_nuevo.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+
         jLabel8.setBackground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("Z");
 
-        sp_z_nuevo.setModel(new javax.swing.SpinnerNumberModel(10, 10, null, 1));
+        jLabel6.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel6.setText("Y");
+
+        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("X");
+
+        btn_generar_csv.setBackground(new java.awt.Color(250, 243, 176));
+        btn_generar_csv.setText("Leer");
+        btn_generar_csv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn_generar_csvMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn_generar_csvMouseExited(evt);
+            }
+        });
+        btn_generar_csv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_generar_csvActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -198,38 +222,6 @@ public class Interfaz extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btn_clasidicar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jLabel7)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(sp_K, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(btn_generar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel5)
-                                            .addComponent(jLabel6))
-                                        .addGap(21, 21, 21)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(sp_y_nuevo)
-                                            .addComponent(sp_x_nuevo)))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addGap(21, 21, 21)
-                                        .addComponent(sp_z_nuevo))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btn_agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(btn_limpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE)))))
-                        .addGap(16, 16, 16))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
@@ -237,7 +229,34 @@ public class Interfaz extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(sp_objetos)
                             .addComponent(sp_clases))
-                        .addGap(6, 6, 6))))
+                        .addGap(6, 6, 6))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel8))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(sp_z_nuevo, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(sp_y_nuevo, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(sp_x_nuevo)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(0, 9, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btn_clasidicar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                            .addComponent(jLabel7)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(sp_K, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(btn_generar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btn_agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btn_limpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btn_generar_csv, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(16, 16, 16))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -252,29 +271,31 @@ public class Interfaz extends javax.swing.JFrame {
                     .addComponent(sp_objetos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btn_generar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addComponent(btn_generar_csv, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(btn_limpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(sp_x_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(sp_y_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(sp_z_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(sp_x_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sp_y_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sp_z_nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btn_agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sp_K, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_clasidicar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -299,13 +320,13 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void btn_generarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generarActionPerformed
         clases = null;
-        
+
         //panel_obj_3D.removeAll();
         panel_obj_3D.removeAllPlots();
-        
+
         numClases = (int) sp_clases.getValue();
         numObjectosPorClase = (int) sp_objetos.getValue();
-        
+
         clases = new Clase[numClases];
         // generar nombres y colores para las clases
         char letra = 'A';
@@ -324,7 +345,7 @@ public class Interfaz extends javax.swing.JFrame {
         for (int i = 0; i < numClases; i++) {
             String clase = nombre_clases.get(i);
             Color color = colores.get(i);
-            
+
             // arreglo para asignar puntos a una clase 
             objeto[] temp_objetos = new objeto[numObjectosPorClase];
             for (int j = 0; j < numObjectosPorClase; j++) {
@@ -334,19 +355,19 @@ public class Interfaz extends javax.swing.JFrame {
                 System.out.println(o);
                 objetos.add(o);
             }
-            
+
             // llenar el array con clases
-            Clase clase_temp = new Clase(temp_objetos,color, clase);
-            System.out.println("se agrego "+ clase_temp);
+            Clase clase_temp = new Clase(temp_objetos, color, clase);
+            System.out.println("se agrego " + clase_temp);
             clases[i] = clase_temp;
         }
-        
+
         // generar sus puntos
         for (int i = 0; i < clases.length; i++) {
             System.out.println(clases[0].getNom_clase());
             panel_obj_3D.addScatterPlot(clases[i].getNom_clase(), clases[i].getColor(), clases[i].getX(), clases[i].getY(), clases[i].getZ());
         }
-        
+
     }//GEN-LAST:event_btn_generarActionPerformed
 
     public static double generarAleatorioEntre(double min, double max) {
@@ -359,7 +380,7 @@ public class Interfaz extends javax.swing.JFrame {
         double numeroAleatorio = min + (rand.nextDouble() * (max - min));
         return numeroAleatorio;
     }
-    
+
     private void btn_generarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_generarMouseEntered
         btn_generar.setBackground(new java.awt.Color(249, 227, 163));
     }//GEN-LAST:event_btn_generarMouseEntered
@@ -378,7 +399,6 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void btn_limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_limpiarActionPerformed
 
-
         //colores.clear();
         x_area.clear();
         y_area.clear();
@@ -386,25 +406,22 @@ public class Interfaz extends javax.swing.JFrame {
         y_area_long.clear();
 
         objeto_agregado = null;
-        
+
         clases = null;
-        
+
         //panel_obj_3D.removeAll();
         panel_obj_3D.removeAllPlots();
-        
+
         //limpiar terminal
         limpiarConsola();
-        
 
         nombre_clases.clear();
 
         objetos.clear();
 
-    
 
     }//GEN-LAST:event_btn_limpiarActionPerformed
 
-    
     public static void limpiarConsola() {
         String sistemaOperativo = System.getProperty("os.name").toLowerCase();
 
@@ -430,7 +447,7 @@ public class Interfaz extends javax.swing.JFrame {
         }
     }
 
-    
+
     private void btn_agregarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_agregarMouseEntered
         btn_agregar.setBackground(new java.awt.Color(249, 227, 163));
     }//GEN-LAST:event_btn_agregarMouseEntered
@@ -443,13 +460,13 @@ public class Interfaz extends javax.swing.JFrame {
         //hacer dible cast 
         // a int para obtener el valor de el spiner
         // y despues a double para graficar
-        objeto_agregado = new objeto(null, Color.BLACK, (int) sp_x_nuevo.getValue(), (int) sp_y_nuevo.getValue(), (int) sp_z_nuevo.getValue() );
+        objeto_agregado = new objeto(null, Color.BLACK, (int) sp_x_nuevo.getValue(), (int) sp_y_nuevo.getValue(), (int) sp_z_nuevo.getValue());
 
         double[] x = {(double) objeto_agregado.getX()};
         double[] y = {(double) objeto_agregado.getY()};
         double[] z = {(double) objeto_agregado.getZ()};
 
-        panel_obj_3D.addScatterPlot("nuevo", Color.black, x,y,z);
+        panel_obj_3D.addScatterPlot("nuevo", Color.black, x, y, z);
     }//GEN-LAST:event_btn_agregarActionPerformed
 
     private void btn_clasidicarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_clasidicarMouseEntered
@@ -508,11 +525,10 @@ public class Interfaz extends javax.swing.JFrame {
             double[] x = {objeto_agregado.getX()};
             double[] y = {objeto_agregado.getY()};
             double[] z = {objeto_agregado.getZ()};
-            
+
             borrar_y_pintar();
-            panel_obj_3D.addScatterPlot("Ganadora "+claseGanadora, buscarColor(claseGanadora), x,y,z);
-            
-            
+            panel_obj_3D.addScatterPlot("Ganadora " + claseGanadora, buscarColor(claseGanadora), x, y, z);
+
         } else {
             JOptionPane.showMessageDialog(null, "¡Hay un empate o no hay un ganador claro!", "Advertencia", JOptionPane.WARNING_MESSAGE);
 
@@ -533,6 +549,156 @@ public class Interfaz extends javax.swing.JFrame {
         SpinnerNumberModel spinnerModel_x = new SpinnerNumberModel(1, 1, max, 1);
         sp_K.setModel(spinnerModel_x);
     }//GEN-LAST:event_sp_objetosStateChanged
+
+    private void btn_generar_csvMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_generar_csvMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_generar_csvMouseEntered
+
+    private void btn_generar_csvMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_generar_csvMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_generar_csvMouseExited
+
+    private void btn_generar_csvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generar_csvActionPerformed
+        
+        // Crear una ventana de selección de archivo
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccione un archivo CSV");
+
+        // Establecer la ruta inicial deseada
+        String initialDirectoryPath = "C:\\Users\\Hp245-User\\Documents\\NetBeansProjects\\IA\\KNN\\";
+        File initialDirectory = new File(initialDirectoryPath);
+        fileChooser.setCurrentDirectory(initialDirectory);
+
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            String selectedFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+            clases = null;
+
+            //panel_obj_3D.removeAll();
+            panel_obj_3D.removeAllPlots();
+
+            numClases = (int) 3;
+            numObjectosPorClase = 50;
+
+            clases = new Clase[numClases];
+            // generar nombres y colores para las clases
+            char letra = 'A';
+            for (int i = 0; i < numClases; i++) {
+                // generar nombre de clases
+                String item = "clase " + letra;
+                letra++;
+
+                // generar colores
+                Color color_random = new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+                nombre_clases.add(item);
+                colores.add(color_random);
+            }
+
+            int inicio=1;
+            int fin=51;
+            // llenar objetos por cada clase
+            for (int i = 0; i < numClases; i++) {
+                String clase = nombre_clases.get(i);
+                Color color = colores.get(i);
+                
+                double[] x = readColumnData(selectedFilePath, inicio, fin, 1);
+                double[] y = readColumnData(selectedFilePath, inicio, fin, 2);
+                double[] z = readColumnData(selectedFilePath, inicio, fin, 3);
+                
+
+                // arreglo para asignar puntos a una clase 
+                objeto[] temp_objetos = new objeto[numObjectosPorClase];
+                for (int j = 0; j < numObjectosPorClase; j++) {
+                    // generar e imprimir los puntos en el plot
+
+                    objeto o = new objeto(clase, color, x[j], y[j], z[j]);
+                    temp_objetos[j] = o;
+                    System.out.println(o);
+                    objetos.add(o);
+                }
+
+                // llenar el array con clases
+                Clase clase_temp = new Clase(temp_objetos, color, clase);
+                System.out.println("se agrego " + clase_temp);
+                clases[i] = clase_temp;
+                
+                inicio+=50;
+                fin+=50;
+            }
+
+            // generar sus puntos
+            for (int i = 0; i < clases.length; i++) {
+                System.out.println(clases[0].getNom_clase());
+                panel_obj_3D.addScatterPlot(clases[i].getNom_clase(), clases[i].getColor(), clases[i].getX(), clases[i].getY(), clases[i].getZ());
+            }
+        }
+    }//GEN-LAST:event_btn_generar_csvActionPerformed
+
+    private static double[] readColumnData(String csvFileName, int numeroInicio, int numeroFin, int numeroColumna) {
+        ArrayList<Double> dataList = new ArrayList<>();
+
+        try {
+            // Crear un lector de CSV
+            CSVReader reader = new CSVReader(new FileReader(csvFileName));
+
+            // Leer y procesar cada fila a medida que se lee
+            String[] nextLine;
+            int rowNumber = 1;
+            while ((nextLine = reader.readNext()) != null && rowNumber <= numeroFin) {
+                if (rowNumber >= numeroInicio) {
+                    try {
+                        double doubleValue = Double.parseDouble(nextLine[numeroColumna - 1]); // Restar 1 porque los índices comienzan en 0
+                        dataList.add(doubleValue);
+                    } catch (NumberFormatException e) {
+                        // Ignorar valores que no se pueden convertir a double
+                    }
+                }
+                rowNumber++;
+            }
+
+            // Cerrar el lector
+            reader.close();
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+
+        // Convertir la lista de Double a un arreglo de double
+        double[] dataArray = new double[dataList.size()];
+        for (int i = 0; i < dataList.size(); i++) {
+            dataArray[i] = dataList.get(i);
+        }
+
+        return dataArray;
+    }
+
+    private static String getClase(String csvFileName, int numeroFila) {
+        String valorColumna5 = null;
+
+        try {
+            // Crear un lector de CSV
+            CSVReader reader = new CSVReader(new FileReader(csvFileName));
+
+            // Leer hasta la fila especificada
+            int currentRow = 1;
+            String[] rowData = null;
+            while (currentRow <= numeroFila && (rowData = reader.readNext()) != null) {
+                if (currentRow == numeroFila) {
+                    // Obtener el valor de la columna 5 (índice 4)
+                    if (rowData.length >= 5) { // Asegurarse de que haya al menos 5 columnas
+                        valorColumna5 = rowData[4];
+                    }
+                }
+                currentRow++;
+            }
+
+            // Cerrar el lector
+            reader.close();
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+
+        return valorColumna5;
+    }
 
     private static ArrayList<objeto> seleccionarVotantes(ArrayList<objeto> objetos, int k) {
         ArrayList<objeto> votantesSeleccionados = new ArrayList<>();
@@ -619,7 +785,7 @@ public class Interfaz extends javax.swing.JFrame {
         System.out.println("yes");
 
         borrar_y_pintar();
-        panel_obj_3D.addScatterPlot("Ganadora "+claseDistanciaMenor, buscarColor(claseDistanciaMenor), x,y,z);
+        panel_obj_3D.addScatterPlot("Ganadora " + claseDistanciaMenor, buscarColor(claseDistanciaMenor), x, y, z);
 
     }
 
@@ -668,7 +834,6 @@ public class Interfaz extends javax.swing.JFrame {
         });
     }
 
-    
     public static void mostrarGanador(Color colorDeFondo, String mensaje, String clase) {
 
         Color colorDeTexto = Color.BLACK; // Color de texto personalizado
@@ -692,26 +857,25 @@ public class Interfaz extends javax.swing.JFrame {
 
         //objeto_agregado = null;
     }
-    
-    public static void borrar_y_pintar(){
+
+    public static void borrar_y_pintar() {
         panel_obj_3D.removeAllPlots();
         for (Clase clase : clases) {
             panel_obj_3D.addScatterPlot(clase.getNom_clase(), clase.getColor(), clase.getX(), clase.getY(), clase.getZ());
         }
     }
 
-    
-    public void generar_10_colores(){
-        colores.add( Color.decode("#FF0000"));
-        colores.add( Color.decode("#0000FF"));
-        colores.add( Color.decode("#008000"));
-        colores.add( Color.decode("#FFFF00"));
-        colores.add( Color.decode("#FFA500"));
-        colores.add( Color.decode("#FF00FF"));
-        colores.add( Color.decode("#00FFFF"));
-        colores.add( Color.decode("#FFC0CB"));
-        colores.add( Color.decode("#800080"));
-        colores.add( Color.decode("#40E0D0"));
+    public void generar_10_colores() {
+        colores.add(Color.decode("#FF0000"));
+        colores.add(Color.decode("#0000FF"));
+        colores.add(Color.decode("#008000"));
+        colores.add(Color.decode("#FFFF00"));
+        colores.add(Color.decode("#FFA500"));
+        colores.add(Color.decode("#FF00FF"));
+        colores.add(Color.decode("#00FFFF"));
+        colores.add(Color.decode("#FFC0CB"));
+        colores.add(Color.decode("#800080"));
+        colores.add(Color.decode("#40E0D0"));
     }
 
 
@@ -719,6 +883,7 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JButton btn_agregar;
     private javax.swing.JButton btn_clasidicar;
     private javax.swing.JButton btn_generar;
+    private javax.swing.JButton btn_generar_csv;
     private javax.swing.JButton btn_limpiar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -765,7 +930,7 @@ class Calculador_de_Distancia extends Thread {
         double x1 = obj1.getX();
         double y1 = obj1.getY();
         double z1 = obj1.getZ();
-        
+
         double x2 = obj2.getX();
         double y2 = obj2.getY();
         double z2 = obj2.getZ();
