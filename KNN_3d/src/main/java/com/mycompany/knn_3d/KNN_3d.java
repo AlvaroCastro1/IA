@@ -13,7 +13,7 @@ public class KNN_3d {
     public static void main(String[] args) {
         // create your PlotPanel (you can use it as a JPanel)
         Plot3DPanel plot = new Plot3DPanel();
-
+        
         // add a scatter plot to the PlotPanel (points in 3D)
         plot.addScatterPlot("ejemplo", Color.red, x, y, z);
 
