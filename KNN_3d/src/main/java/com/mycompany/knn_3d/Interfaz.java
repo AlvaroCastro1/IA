@@ -2,7 +2,6 @@ package com.mycompany.knn_3d;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import com.opencsv.exceptions.CsvException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Interfaz extends javax.swing.JFrame {
 
@@ -319,64 +317,65 @@ public class Interfaz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_generarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generarActionPerformed
+        // Limpia el aaraylist de clases
         clases = null;
 
-        //panel_obj_3D.removeAll();
+        // remueve todos los graficos del panel
         panel_obj_3D.removeAllPlots();
 
+        // obtiene el num de clases y objetos por clase
         numClases = (int) sp_clases.getValue();
         numObjectosPorClase = (int) sp_objetos.getValue();
 
+        // reserva de memoria con del arreglo de clases
         clases = new Clase[numClases];
+
         // generar nombres y colores para las clases
         char letra = 'A';
         for (int i = 0; i < numClases; i++) {
-            // generar nombre de clases
+            // Genera nombre de clases
             String item = "clase " + letra;
             letra++;
 
-            // generar colores
+            // genera colores aleatorios para las clases
             Color color_random = new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
             nombre_clases.add(item);
             colores.add(color_random);
         }
 
-        // llenar objetos por cada clase
+        // llenar objetos para cada clase
         for (int i = 0; i < numClases; i++) {
             String clase = nombre_clases.get(i);
             Color color = colores.get(i);
 
-            // arreglo para asignar puntos a una clase 
+            // arreglo para asignar puntos a una clase
             objeto[] temp_objetos = new objeto[numObjectosPorClase];
             for (int j = 0; j < numObjectosPorClase; j++) {
-                // generar e imprimir los puntos en el plot
+                // genera objetos y los agrega a la lista de objetos
                 objeto o = new objeto(clase, color, generarAleatorioEntre(a, b), generarAleatorioEntre(a, b), generarAleatorioEntre(a, b));
                 temp_objetos[j] = o;
-                System.out.println(o);
+                //System.out.println(o);
+                // añadir objeto a la lista de objetos
                 objetos.add(o);
             }
 
-            // llenar el array con clases
+            // llena la clase actual con los objetos y la agrega al arreglo de clases
             Clase clase_temp = new Clase(temp_objetos, color, clase);
-            System.out.println("se agrego " + clase_temp);
+            System.out.println("Se agregó " + clase_temp);
             clases[i] = clase_temp;
         }
 
-        // generar sus puntos
+        // genera puntos en el panel para cada clase
         for (int i = 0; i < clases.length; i++) {
-            System.out.println(clases[0].getNom_clase());
+            //System.out.println(clases[i].getNom_clase());
             panel_obj_3D.addScatterPlot(clases[i].getNom_clase(), clases[i].getColor(), clases[i].getX(), clases[i].getY(), clases[i].getZ());
         }
 
     }//GEN-LAST:event_btn_generarActionPerformed
 
     public static double generarAleatorioEntre(double min, double max) {
-        if (min >= max) {
-            throw new IllegalArgumentException("El valor mínimo debe ser menor que el valor máximo.");
-        }
-
         Random rand = new Random();
-        // Utiliza la fórmula min + (rand.nextDouble() * (max - min)) para obtener un número aleatorio en el rango [min, max]
+        // n = min + (random * (max - min))
         double numeroAleatorio = min + (rand.nextDouble() * (max - min));
         return numeroAleatorio;
     }
@@ -422,6 +421,10 @@ public class Interfaz extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btn_limpiarActionPerformed
 
+    /*
+    https://www.educative.io/answers/get-os-version-name-architecture-and-system-properties-in-java
+    https://www.javatpoint.com/java-processbuilder-example
+     */
     public static void limpiarConsola() {
         String sistemaOperativo = System.getProperty("os.name").toLowerCase();
 
@@ -470,22 +473,23 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_agregarActionPerformed
 
     private void btn_clasidicarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_clasidicarMouseEntered
-        // TODO add your handling code here:
+        btn_clasidicar.setBackground(new java.awt.Color(249, 227, 163));
     }//GEN-LAST:event_btn_clasidicarMouseEntered
 
     private void btn_clasidicarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_clasidicarMouseExited
-        // TODO add your handling code here:
+        btn_clasidicar.setBackground(new java.awt.Color(250, 243, 176));
     }//GEN-LAST:event_btn_clasidicarMouseExited
 
     private void btn_clasidicarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clasidicarActionPerformed
-        System.out.println(objetos.size());
+        // System.out.println(objetos.size());
+
         // calcular distancia para cada uno de los objetos
         try {
             for (int i = 0; i < objetos.size(); i++) {
                 Calculador_de_Distancia c = new Calculador_de_Distancia(objeto_agregado, objetos.get(i));
                 c.start();
                 c.join();
-                objetos.get(i).setDistancia((float) c.getDistancia());
+                objetos.get(i).setDistancia((float) (double) c.getDistancia());
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -499,22 +503,21 @@ public class Interfaz extends javax.swing.JFrame {
         }*/
         // Agrega objetos a la lista votantes
         int k = (int) sp_K.getValue();
-        // solo para hacer el empate
-        //int k = 4;
 
-        // TOMAR SOLO LOS n PRIMEROS OBJETOS y AÑADIRLOS A LOS BOTANTES
+        // TOMAR SOLO LOS n PRIMEROS OBJETOS y AÑADIRLOS A LOS VOTANTES
         ArrayList<objeto> votantes = new ArrayList<>();
 
         for (int i = 0; i < (int) k; i++) {
             // System.out.println(objetos.get(i));
             votantes.add(objetos.get(i));
-            System.out.println("v: " + objetos.get(i));
+            System.out.println("votante #" + i + ": " + objetos.get(i));
         }
 
         // crear un nueva lista para buscar la ditancia promedio mas baja
-        ArrayList<objeto> votantesSeleccionados = seleccionarVotantes(votantes, k);
+        //ArrayList<objeto> votantesSeleccionados = seleccionarVotantes(votantes, k);
+
         // en un diccionario se añade la clase y numero de las veces repetidas
-        Map<String, Integer> frecuenciaClases = calcularFrecuenciaClases(votantesSeleccionados);
+        Map<String, Integer> frecuenciaClases = calcularFrecuenciaClases(votantes);
         // Encontrar la clase ganadora
         String claseGanadora = encontrarClaseGanadora(frecuenciaClases);
 
@@ -527,14 +530,18 @@ public class Interfaz extends javax.swing.JFrame {
             double[] z = {objeto_agregado.getZ()};
 
             borrar_y_pintar();
+            
+            objeto nuevo = objeto_agregado;
+            nuevo.setClase(claseGanadora);
+            objetos.add(nuevo);
+            
             panel_obj_3D.addScatterPlot("Ganadora " + claseGanadora, buscarColor(claseGanadora), x, y, z);
 
         } else {
-            JOptionPane.showMessageDialog(null, "¡Hay un empate o no hay un ganador claro!", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "¡No hay un ganador claro!", "Advertencia", JOptionPane.WARNING_MESSAGE);
 
-            System.out.println("¡Hay un empate o no hay un ganador claro!");
             // se envia los k vecinos mas cercanos y se calcula su distancia promedio por clase
-            encontrarClaseMenorDistanciaPromedio(votantesSeleccionados);
+            encontrarClaseMenorDistanciaPromedio(votantes);
         }
     }//GEN-LAST:event_btn_clasidicarActionPerformed
 
@@ -551,161 +558,136 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_sp_objetosStateChanged
 
     private void btn_generar_csvMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_generar_csvMouseEntered
-        // TODO add your handling code here:
+        btn_generar_csv.setBackground(new java.awt.Color(249, 227, 163));
     }//GEN-LAST:event_btn_generar_csvMouseEntered
 
     private void btn_generar_csvMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_generar_csvMouseExited
-        // TODO add your handling code here:
+        btn_generar_csv.setBackground(new java.awt.Color(250, 243, 176));
     }//GEN-LAST:event_btn_generar_csvMouseExited
 
     private void btn_generar_csvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generar_csvActionPerformed
-        
-        // Crear una ventana de selección de archivo
+
+        // cuadro para seleccionar un archivo cvs
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Seleccione un archivo CSV");
 
-        // Establecer la ruta inicial deseada
+        // establecer ruta inicial
         String initialDirectoryPath = "C:\\Users\\Hp245-User\\Documents\\NetBeansProjects\\IA\\KNN\\";
         File initialDirectory = new File(initialDirectoryPath);
         fileChooser.setCurrentDirectory(initialDirectory);
 
+        // respuesta del cuadro para esperar a que el usuario seleccione un archivo
         int returnValue = fileChooser.showOpenDialog(null);
+
         if (returnValue == JFileChooser.APPROVE_OPTION) {
+            // obtener la ruta del archivo
             String selectedFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+
+            // limpiar la lista de clases
             clases = null;
 
-            //panel_obj_3D.removeAll();
+            // limpiar el panel
             panel_obj_3D.removeAllPlots();
 
-            numClases = (int) 3;
+            // solo seran 3 clases de la base de datos iris y 50 elem
+            numClases = 3;
             numObjectosPorClase = 50;
 
+            // inicializar el arreglo de clases
             clases = new Clase[numClases];
+
             // generar nombres y colores para las clases
             char letra = 'A';
             for (int i = 0; i < numClases; i++) {
-                // generar nombre de clases
+                // Generar nombre de clases
                 String item = "clase " + letra;
                 letra++;
 
-                // generar colores
+                // Generar colores aleatorios para las clases y agregarlos a las listas
                 Color color_random = new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
                 nombre_clases.add(item);
                 colores.add(color_random);
             }
 
-            int inicio=1;
-            int fin=51;
-            // llenar objetos por cada clase
+            // como el archvio empieza en la fila uno y son 50 ...
+            int inicio = 1;
+            int fin = 51;
+
+            // llenar objetos para cada clase
             for (int i = 0; i < numClases; i++) {
                 String clase = nombre_clases.get(i);
                 Color color = colores.get(i);
-                
-                double[] x = readColumnData(selectedFilePath, inicio, fin, 1);
-                double[] y = readColumnData(selectedFilePath, inicio, fin, 2);
-                double[] z = readColumnData(selectedFilePath, inicio, fin, 3);
-                
 
-                // arreglo para asignar puntos a una clase 
+                // leer datos de las columnas x, y, z desde el archivo CSV
+                // leerColumna ( archivo , fila de inicio, fila de fin, columna)
+                // regresa un arreglo con los datos
+                double[] x = leerColumna(selectedFilePath, inicio, fin, 1);
+                double[] y = leerColumna(selectedFilePath, inicio, fin, 2);
+                double[] z = leerColumna(selectedFilePath, inicio, fin, 3);
+
+                // arreglo para asignar puntos a cada clase
                 objeto[] temp_objetos = new objeto[numObjectosPorClase];
                 for (int j = 0; j < numObjectosPorClase; j++) {
-                    // generar e imprimir los puntos en el plot
-
+                    // generar objetos y agregarlos a la lista de objetos
                     objeto o = new objeto(clase, color, x[j], y[j], z[j]);
                     temp_objetos[j] = o;
-                    System.out.println(o);
+                    //System.out.println(o);
                     objetos.add(o);
                 }
 
-                // llenar el array con clases
+                // llenar el arreglo con clases
                 Clase clase_temp = new Clase(temp_objetos, color, clase);
-                System.out.println("se agrego " + clase_temp);
+                //System.out.println("Se agregó " + clase_temp);
                 clases[i] = clase_temp;
-                
-                inicio+=50;
-                fin+=50;
+
+                // incrementar para la siguiente clase
+                inicio += 50;
+                fin += 50;
             }
 
-            // generar sus puntos
+            // generar puntos cada clase
             for (int i = 0; i < clases.length; i++) {
-                System.out.println(clases[0].getNom_clase());
+                System.out.println(clases[i].getNom_clase());
                 panel_obj_3D.addScatterPlot(clases[i].getNom_clase(), clases[i].getColor(), clases[i].getX(), clases[i].getY(), clases[i].getZ());
             }
         }
     }//GEN-LAST:event_btn_generar_csvActionPerformed
 
-    private static double[] readColumnData(String csvFileName, int numeroInicio, int numeroFin, int numeroColumna) {
-        ArrayList<Double> dataList = new ArrayList<>();
+    /* https://youtu.be/tD2raUxQRbc */
+    private static double[] leerColumna(String nombreArchivoCSV, int numeroInicio, int numeroFin, int numeroColumna) {
+        ArrayList<Double> listaDatos = new ArrayList<>(); // Arreglo a devolver
 
         try {
-            // Crear un lector de CSV
-            CSVReader reader = new CSVReader(new FileReader(csvFileName));
+            // lector de CSV
+            CSVReader lectorCSV = new CSVReader(new FileReader(nombreArchivoCSV));
 
-            // Leer y procesar cada fila a medida que se lee
-            String[] nextLine;
-            int rowNumber = 1;
-            while ((nextLine = reader.readNext()) != null && rowNumber <= numeroFin) {
-                if (rowNumber >= numeroInicio) {
+            // leer cada fila
+            String[] siguienteLinea;
+            int numeroFila = 1;
+            while ((siguienteLinea = lectorCSV.readNext()) != null && numeroFila <= numeroFin) {
+                if (numeroFila >= numeroInicio) {
                     try {
-                        double doubleValue = Double.parseDouble(nextLine[numeroColumna - 1]); // Restar 1 porque los índices comienzan en 0
-                        dataList.add(doubleValue);
+                        double valorDouble = Double.parseDouble(siguienteLinea[numeroColumna - 1]); // Restar 1 porque los índices comienzan en 0
+                        listaDatos.add(valorDouble);
                     } catch (NumberFormatException e) {
-                        // Ignorar valores que no se pueden convertir a double
+                        // ignorar valores que no sean double
                     }
                 }
-                rowNumber++;
+                numeroFila++;
             }
 
-            // Cerrar el lector
-            reader.close();
+            // cerrar lector
+            lectorCSV.close();
         } catch (IOException | CsvException e) {
             e.printStackTrace();
         }
 
-        // Convertir la lista de Double a un arreglo de double
-        double[] dataArray = new double[dataList.size()];
-        for (int i = 0; i < dataList.size(); i++) {
-            dataArray[i] = dataList.get(i);
+        // convertir de Array<double>a un arreglo de double
+        double[] arregloDatos = new double[listaDatos.size()];
+        for (int i = 0; i < listaDatos.size(); i++) {
+            arregloDatos[i] = listaDatos.get(i);
         }
-
-        return dataArray;
-    }
-
-    private static String getClase(String csvFileName, int numeroFila) {
-        String valorColumna5 = null;
-
-        try {
-            // Crear un lector de CSV
-            CSVReader reader = new CSVReader(new FileReader(csvFileName));
-
-            // Leer hasta la fila especificada
-            int currentRow = 1;
-            String[] rowData = null;
-            while (currentRow <= numeroFila && (rowData = reader.readNext()) != null) {
-                if (currentRow == numeroFila) {
-                    // Obtener el valor de la columna 5 (índice 4)
-                    if (rowData.length >= 5) { // Asegurarse de que haya al menos 5 columnas
-                        valorColumna5 = rowData[4];
-                    }
-                }
-                currentRow++;
-            }
-
-            // Cerrar el lector
-            reader.close();
-        } catch (IOException | CsvException e) {
-            e.printStackTrace();
-        }
-
-        return valorColumna5;
-    }
-
-    private static ArrayList<objeto> seleccionarVotantes(ArrayList<objeto> objetos, int k) {
-        ArrayList<objeto> votantesSeleccionados = new ArrayList<>();
-        for (int i = 0; i < k && i < objetos.size(); i++) {
-            votantesSeleccionados.add(objetos.get(i));
-        }
-        return votantesSeleccionados;
+        return arregloDatos;
     }
 
     private static Map<String, Integer> calcularFrecuenciaClases(ArrayList<objeto> votantes) {
@@ -742,31 +724,34 @@ public class Interfaz extends javax.swing.JFrame {
     }
 
     private static void encontrarClaseMenorDistanciaPromedio(ArrayList<objeto> votantes) {
-        // clase: distancia promedio
-        Map<String, Float> distanciaTotalPorClase = new HashMap<>();
-        // clase: frecuencia
+        // dicc que almacenará la distancia promedio por clase
+        Map<String, Double> distanciaTotalPorClase = new HashMap<>();
+        // dicc que almacenará la cantidad de objetos por clase
         Map<String, Integer> cantidadObjetosPorClase = new HashMap<>();
 
-        // Calcular la distancia total y la frecuencia
+        // Calcular la distancia total y la frecuencia por clase
         for (objeto votante : votantes) {
             String clase = votante.getClase();
-            float distancia = votante.getDistancia();
-            System.out.println("-> " + clase + "\t d=" + distanciaTotalPorClase.getOrDefault(clase, 0f) + distancia);
-            distanciaTotalPorClase.put(clase, distanciaTotalPorClase.getOrDefault(clase, 0f) + distancia);
+            double distancia = votante.getDistancia();
+            
+            // suma acumulativa de distancias / count
+            
+            distanciaTotalPorClase.put(clase, distanciaTotalPorClase.getOrDefault(clase, 0.0) + distancia);
             cantidadObjetosPorClase.put(clase, cantidadObjetosPorClase.getOrDefault(clase, 0) + 1);
         }
 
         // Calcular la distancia promedio y encontrar la distancia menor con la clase correspondiente
-        float distanciaMenor = Float.MAX_VALUE; // Inicializar la DISTANCIA garantiza que cualquier valor calculado y comparado posteriormente será menor que este valor inicial. 
+        double distanciaMenor = 0.0;
+        //double distanciaMenor = Double.MAX_VALUE; 
+        /*https://stackoverflow.com/questions/16146219/java-double-max-value*/
         String claseDistanciaMenor = null;
 
-        // iterar por cada elemento del dicc
-        for (Map.Entry<String, Float> entradaDistancia : distanciaTotalPorClase.entrySet()) {
+        for (Map.Entry<String, Double> entradaDistancia : distanciaTotalPorClase.entrySet()) {
             String clase = entradaDistancia.getKey();
-            float distanciaTotal = entradaDistancia.getValue();
+            double distanciaTotal = entradaDistancia.getValue();
             int cantidadObjetos = cantidadObjetosPorClase.get(clase);
 
-            float distanciaPromedio = distanciaTotal / cantidadObjetos;
+            double distanciaPromedio = distanciaTotal / cantidadObjetos;
 
             if (distanciaPromedio < distanciaMenor) {
                 distanciaMenor = distanciaPromedio;
@@ -776,17 +761,17 @@ public class Interfaz extends javax.swing.JFrame {
             System.out.println("Clase: " + clase + ", Distancia Promedio: " + distanciaPromedio);
         }
 
+        // Imprimir la clase con la distancia promedio más baja y la distancia promedio
         System.out.println("La clase con la distancia promedio más baja es: " + claseDistanciaMenor);
         System.out.println("Distancia Promedio más baja: " + distanciaMenor);
         mostrarGanador(buscarColor(claseDistanciaMenor), "La clase con la distancia promedio más baja es la " + claseDistanciaMenor + "= " + distanciaMenor, claseDistanciaMenor);
         double[] x = {objeto_agregado.getX()};
         double[] y = {objeto_agregado.getY()};
         double[] z = {objeto_agregado.getZ()};
-        System.out.println("yes");
 
+        // borrar y pintar el gráfico 3D con la clase ganadora
         borrar_y_pintar();
         panel_obj_3D.addScatterPlot("Ganadora " + claseDistanciaMenor, buscarColor(claseDistanciaMenor), x, y, z);
-
     }
 
     public static Color buscarColor(String clase) {
@@ -908,6 +893,7 @@ public class Interfaz extends javax.swing.JFrame {
 }
 
 // clase dedicada a calcular la distancia entre el punto y cada punto de las clases
+// distancia euclidiana
 class Calculador_de_Distancia extends Thread {
 
     public objeto obj1, obj2;

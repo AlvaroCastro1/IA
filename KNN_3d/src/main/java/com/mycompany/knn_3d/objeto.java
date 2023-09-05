@@ -1,5 +1,5 @@
 package com.mycompany.knn_3d;
-
+// interfaz que permite que los objetos de una clase sean comparables entre sí
 import java.awt.*;
 
 public class objeto implements Comparable<objeto> {
@@ -7,7 +7,7 @@ public class objeto implements Comparable<objeto> {
     private String clase;
     private Color color;
     private double x, y, z;
-    private float distancia;
+    private double distancia;
 
     
 
@@ -19,9 +19,13 @@ public class objeto implements Comparable<objeto> {
         this.z = z;
     }
 
-    public int compareTo(objeto other) {
-        return Float.compare(this.distancia, other.distancia);
+    public int compareTo(objeto otro) {
+        return Double.compare(this.distancia, otro.distancia);
     }
+    
+    // negativo si distancia es menor que la distancia a comparar
+    // cero si distancia es igual 
+    // positivo si distancia es mayor
 
     @Override
     public String toString() {
@@ -68,7 +72,7 @@ public class objeto implements Comparable<objeto> {
         this.z = z;
     }
 
-    public float getDistancia() {
+    public double getDistancia() {
         return distancia;
     }
 
