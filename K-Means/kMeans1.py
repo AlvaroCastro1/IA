@@ -20,7 +20,7 @@ clases = db_iris.target
 kmeans = KMeans( n_clusters=3 )     #n_clusters = 8    init=default KMeans++
 #kmeans = KMeans(n_clusters=3, init='random') # los centroides iniciales se seleccionarán de manera aleatoria entre los puntos de datos existentes
 
-kmeans.fit( datos )         # clusters
+kmeans.fit( datos )         # entrenamiento clusters
                             # inicia el proceso de agrupación K-Means en los datos 
 
 # print( kmeans.labels_ )     # imprime las clases 0 setosa, 1 versicolor, 2 virginica
@@ -33,6 +33,7 @@ print( kmeans.n_iter_ )         # num_veces que el algoritmo actualizo los centr
 predic = kmeans.predict(datos)  # asignar cada punto de datos en datos a uno de los clusters encontrados durante el proceso de ajuste
 print(predic) # imprime las clases resultantes despues de realizar la prediccion por cada objeto
 
+# entrenamiento y repiccion al mismo tiempo
 predic2 = kmeans.fit_predict(datos)     #fit + predict
                                         # realizara la agrupación de datos y encontrara los centroides
                                         # predice las etiquetas dela clase para cada punto
